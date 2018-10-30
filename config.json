@@ -1,0 +1,10 @@
+{
+    "port": 4333,
+    "DataBase": {
+        "enable": true,
+        "driver": "mysql",
+        "dsn": "root:Wj531096404@tcp(gz-cdb-jm7yuqdy.sql.tencentcdb.com:62691)/zkb_website?charset=utf8&parseTime=True&loc=Asia%2FShanghai",
+        "show_sql": true,
+        "max_open_conns": 200
+    }
+}
