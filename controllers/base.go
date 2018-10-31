@@ -1,28 +1,54 @@
 package controllers
 
 import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"net/http"
 	"reflect"
 	"strings"
 
 	"../utils"
+	"github.com/go-session/session"
+	uuid "github.com/satori/go.uuid"
 )
 
 //BaseControllers ..
 type BaseControllers struct {
-	data map[string]interface{}
-	w    http.ResponseWriter
-	r    *http.Request
-	I    interface{}
+	data  map[string]interface{} //	储存要返回客户端的数据
+	w     http.ResponseWriter
+	r     *http.Request
+	I     interface{}   //	储存子类(为了反射获取方法)
+	input input         //	储存post数据
+	store session.Store //	储存session
+}
+
+//post 数据格式
+type input struct {
+	M    string
+	ID   string
+	Data interface{}
 }
 
 //HandleHTTPRequest ..
 func (c *BaseControllers) HandleHTTPRequest(w http.ResponseWriter, r *http.Request) {
 	c.w = w
 	c.r = r
+	fmt.Println(r.URL.Path, "===========")
 	c.data = make(map[string]interface{})
-	c.crossDomin()
-	c.r.ParseForm()
+
+	store, err := session.Start(context.Background(), c.w, c.r)
+	utils.CheckErr(err)
+	c.store = store
+
+	//	请求的Content-type为application/json 所以post里取得的数据为json格式
+	//	把这个数据解析成input类型并且存到BaseControllers.input里面
+	con, _ := ioutil.ReadAll(r.Body)
+	i := new(input)
+	err = json.Unmarshal(con, i)
+	utils.CheckErr(err)
+	c.input = *i
 	c.apply()
 }
 
@@ -47,8 +73,17 @@ func (c *BaseControllers) apply() {
 	}
 }
 
-func (c *BaseControllers) getContext() http.ResponseWriter {
-	return c.w
+func (c *BaseControllers) parseItem(item interface{}, setID bool) {
+	jsonData := utils.ToJSON(c.input.Data)
+	err := json.Unmarshal([]byte(jsonData), item)
+	if setID {
+		uid, err := uuid.NewV4()
+		utils.CheckErr(err)
+		id := uid.String()
+		v := reflect.ValueOf(item).Elem()
+		v.FieldByName("ID").Set(reflect.ValueOf(id))
+	}
+	utils.CheckErr(err)
 }
 
 func (c *BaseControllers) success(data interface{}) {
@@ -74,7 +109,7 @@ func (c *BaseControllers) failure(err interface{}) {
 }
 
 func (c *BaseControllers) getMethod() string {
-	v := c.getStringFromForm("m")
+	v := c.input.M
 	if v == "" {
 		panic("方法名不能为空")
 	}
@@ -84,6 +119,7 @@ func (c *BaseControllers) getMethod() string {
 }
 
 func (c *BaseControllers) getStringFromForm(key string) string {
+	c.r.ParseForm()
 	vs := c.r.Form[key]
 	if vs == nil || len(vs) == 0 || vs[0] == "" {
 		vs = c.r.PostForm[key]
@@ -95,7 +131,7 @@ func (c *BaseControllers) getStringFromForm(key string) string {
 }
 
 func (c *BaseControllers) getID() string {
-	return c.getStringFromForm("id")
+	return c.input.ID
 }
 
 func (c *BaseControllers) crossDomin() {

@@ -1,14 +1,16 @@
 package utils
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
-	"test/throw"
+	"fmt"
 )
 
 //ToJSON ..
 func ToJSON(obj interface{}) string {
 	data, err := json.Marshal(obj)
-	throw.CheckErr(err)
+	CheckErr(err)
 	json := string(data[:])
 
 	return json
@@ -19,4 +21,17 @@ func CheckErr(err error) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+//Encrypt ..
+func Encrypt(p string) string {
+	h := md5.New()
+	h.Write([]byte(p))
+	return hex.EncodeToString(h.Sum(nil))
+}
+
+//InterfaceToStr ..
+func InterfaceToStr(obj interface{}) string {
+	msg := fmt.Sprint(obj)
+	return msg
 }
