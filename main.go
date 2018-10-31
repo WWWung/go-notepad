@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"test/conf"
 
+	"./conf"
 	_ "./routers"
 	"./utils"
 	"github.com/ilibs/gosql"

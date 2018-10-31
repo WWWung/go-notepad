@@ -2,6 +2,7 @@ package conf
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 
 	"../utils"
@@ -21,5 +22,6 @@ func init() {
 	utils.CheckErr(err)
 	jsonStr := string(b)
 	err = json.Unmarshal([]byte(jsonStr), &Config)
+	fmt.Println(Config)
 	utils.CheckErr(err)
 }
