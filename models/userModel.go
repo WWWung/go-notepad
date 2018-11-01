@@ -83,7 +83,7 @@ func (m UserMapper) GetList(pageIndex int, rowsInPage int, sort string) (r inter
 
 //Insert ..
 func (m UserMapper) Insert(tx *sqlx.Tx, item *User) (int, int) {
-	sqlStr := "insert into " + m.TableName + "(id,name,namePinyin1,namePinyin2,createTime,lastLoginTime,power,pwMD5) values (?,?,?,?,?,?,?,?,?)"
+	sqlStr := "insert into " + m.TableName + "(id,name,namePinyin1,namePinyin2,createTime,lastLoginTime,power,pwMD5) values (?,?,?,?,?,?,?,?)"
 	var args = []interface{}{item.ID, item.Name, item.NamePinyin1, item.NamePinyin2, item.CreateTime, item.LastLoginTime, item.Power, item.PwMD5}
 	id, count := m.insertItem(tx, sqlStr, args...)
 	return id, count

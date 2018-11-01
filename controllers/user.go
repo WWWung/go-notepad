@@ -20,6 +20,12 @@ func (c *UserController) Add() string {
 	item := models.User{}
 	c.parseItem(&item, true)
 	mp := models.GetUserMapper("")
+
+	if mp.GetCount(nil, " name=?", item.Name) > 0 {
+		panic("账号已存在")
+	}
+
+	c.initData(&item)
 	mp.Tx(func(tx *sqlx.Tx) (r error) {
 		defer func() {
 			if err := recover(); err != nil {
@@ -41,7 +47,23 @@ func (c *UserController) Add() string {
 	s, ok := c.store.Get("user")
 	fmt.Println("session is ", s, ok)
 
-	return item.ID
+	return item.Name
+}
+
+//Login ..
+func (c *UserController) Login() string {
+	mp := models.GetUserMapper("")
+	item := models.User{}
+	c.parseItem(&item, false)
+	user := mp.Get(nil, " where name=? ", item.Name)
+	if user == nil {
+		return "账号不存在"
+	}
+	u := user.(*models.User)
+	if utils.Encrypt(item.Password) != u.PwMD5 {
+		panic("账号或密码错误")
+	}
+	return u.Name
 }
 
 func (c *UserController) initData(item *models.User) {

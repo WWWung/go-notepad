@@ -14,6 +14,10 @@ func init() {
 	c := new(controllers.CaptchaController)
 	c.I = c
 	register("/captcha.api", c)
+
+	user := new(controllers.UserController)
+	user.I = user
+	register("/user.api", user)
 }
 
 func register(pattern string, service controllers.IService) {

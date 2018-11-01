@@ -3,7 +3,7 @@
     "DataBase": {
         "enable": true,
         "driver": "mysql",
-        "dsn": "root:wj531096404@tcp(gz-cdb-jm7yuqdy.sql.tencentcdb.com:62691)/zkb_website?charset=utf8&parseTime=True&loc=Asia%2FShanghai",
+        "dsn": "root:wj531096404@tcp(gz-cdb-jm7yuqdy.sql.tencentcdb.com:62691)/notepad?charset=utf8&parseTime=True&loc=Asia%2FShanghai",
         "show_sql": true,
         "max_open_conns": 200
     }
