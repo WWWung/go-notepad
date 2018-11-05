@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"../utils"
@@ -101,9 +102,10 @@ func (c *BaseControllers) json() {
 }
 
 func (c *BaseControllers) failure(err interface{}) {
+	fmt.Println(err, "err")
 	c.data["json"] = map[string]interface{}{
 		"code": 1,
-		"data": err,
+		"data": utils.InterfaceToStr(err),
 	}
 	c.json()
 }
@@ -128,6 +130,22 @@ func (c *BaseControllers) getStringFromForm(key string) string {
 		return ""
 	}
 	return vs[0]
+}
+
+//	从url参数里获取pageIndex
+func (c *BaseControllers) getPageIndex() int {
+	p := c.getStringFromForm("pageIndex")
+	pageIndex, err := strconv.Atoi(p)
+	utils.CheckErr(err)
+	return pageIndex
+}
+
+//	从url参数里获取rowsInPage
+func (c *BaseControllers) getRowsInPage() int {
+	p := c.getStringFromForm("rowsInPage")
+	rowsInPage, err := strconv.Atoi(p)
+	utils.CheckErr(err)
+	return rowsInPage
 }
 
 func (c *BaseControllers) getID() string {

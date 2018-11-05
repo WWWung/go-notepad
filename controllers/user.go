@@ -39,7 +39,7 @@ func (c *UserController) Add() string {
 		}
 		return nil
 	})
-	c.store.Set("user", item)
+	c.store.Set("user", &item)
 	err := c.store.Save()
 	utils.CheckErr(err)
 
@@ -63,6 +63,9 @@ func (c *UserController) Login() string {
 	if utils.Encrypt(item.Password) != u.PwMD5 {
 		panic("账号或密码错误")
 	}
+	c.store.Set("user", user)
+	err := c.store.Save()
+	utils.CheckErr(err)
 	return u.Name
 }
 
@@ -72,4 +75,16 @@ func (c *UserController) initData(item *models.User) {
 	item.NamePinyin1, item.NamePinyin2 = utils.ToPinYin1(item.Name)
 	item.LastLoginTime = time.Now()
 	item.Power = 1
+}
+
+func (c *UserController) getUserFromSession() *models.User {
+	s, ok := c.store.Get("user")
+	if !ok {
+		panic("获取用户信息失败")
+	}
+	if s == nil {
+		panic("获取用户信息失败")
+	}
+	user := s.(*models.User)
+	return user
 }

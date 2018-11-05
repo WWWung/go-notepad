@@ -18,6 +18,10 @@ func init() {
 	user := new(controllers.UserController)
 	user.I = user
 	register("/user.api", user)
+
+	_type := new(controllers.TypeController)
+	_type.I = _type
+	register("/type.api", _type)
 }
 
 func register(pattern string, service controllers.IService) {

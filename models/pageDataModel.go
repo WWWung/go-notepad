@@ -2,11 +2,11 @@ package models
 
 //PageDataModel ..
 type PageDataModel struct {
-	pageIndex int
-	rowsIndex int
-	pageCount int
-	total     int
-	rows      interface{}
+	PageIndex int         `json:"pageIndex"`
+	RowsIndex int         `json:"rowsIndex"`
+	PageCount int         `json:"pageCount"`
+	Total     int         `json:"total"`
+	Rows      interface{} `json:"rows"`
 }
 
 //PagingData ..
