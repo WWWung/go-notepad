@@ -15,7 +15,7 @@ type TypeController struct {
 }
 
 //Add ..
-func (c *TypeController) Add() string {
+func (c *TypeController) Add() models.Type {
 	item := models.Type{}
 	c.parseItem(&item, true)
 	mp := models.GetTypeMapper("")
@@ -35,7 +35,7 @@ func (c *TypeController) Add() string {
 		return nil
 	})
 
-	return item.Name
+	return item
 }
 
 //Get ..
@@ -48,8 +48,13 @@ func (c *TypeController) GetList() interface{} {
 	c.r.ParseForm()
 	pageIndex := c.getPageIndex()
 	rowsInPage := c.getRowsInPage()
+	sort := c.getStringFromForm("sort")
+	sortDir := c.getStringFromForm("sortDir")
+	if sort != "" {
+		sort += " " + sortDir + " "
+	}
 	mp := models.GetTypeMapper("")
-	r := mp.GetList(pageIndex, rowsInPage, "", "")
+	r := mp.GetList(pageIndex, rowsInPage, sort, "")
 	return r
 }
 

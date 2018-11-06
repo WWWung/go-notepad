@@ -69,6 +69,25 @@ func (c *UserController) Login() string {
 	return u.Name
 }
 
+//SignOut ..
+func (c *UserController) SignOut() interface{} {
+	err := c.store.Delete("user")
+	return err
+}
+
+//IsLogin ..
+func (c *UserController) IsLogin() string {
+	s, ok := c.store.Get("user")
+	if !ok {
+		panic("未登录")
+	}
+	if s == nil {
+		panic("未登录")
+	}
+	user := s.(*models.User)
+	return user.Name
+}
+
 func (c *UserController) initData(item *models.User) {
 	item.PwMD5 = utils.Encrypt(item.Password)
 	item.CreateTime = time.Now()
