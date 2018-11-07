@@ -2,23 +2,22 @@ package controllers
 
 import (
 	"errors"
-	"time"
 
 	"../models"
 	"../utils"
 	"github.com/jmoiron/sqlx"
 )
 
-//TypeController ..
-type TypeController struct {
+//NoteController ..
+type NoteController struct {
 	UserController
 }
 
 //Add ..
-func (c *TypeController) Add() models.Type {
-	item := models.Type{}
+func (c *NoteController) Add() models.Note {
+	item := models.Note{}
 	c.parseItem(&item, true)
-	mp := models.GetTypeMapper("")
+	mp := models.GetNoteMapper("")
 
 	c.initData(&item)
 	mp.Tx(func(tx *sqlx.Tx) (r error) {
@@ -39,13 +38,12 @@ func (c *TypeController) Add() models.Type {
 }
 
 //Get ..
-func (c *TypeController) Get() {
+func (c *NoteController) Get() {
 
 }
 
 //GetList ..
-func (c *TypeController) GetList() interface{} {
-	c.r.ParseForm()
+func (c *NoteController) GetList() interface{} {
 	pageIndex := c.getPageIndex()
 	rowsInPage := c.getRowsInPage()
 	sort := c.getStringFromForm("sort")
@@ -53,29 +51,21 @@ func (c *TypeController) GetList() interface{} {
 	if sort != "" {
 		sort += " " + sortDir + " "
 	}
-	mp := models.GetTypeMapper("")
+	mp := models.GetNoteMapper("")
 	r := mp.GetList(pageIndex, rowsInPage, sort, "")
 	return r
 }
 
 //Update ..
-func (c *TypeController) Update() {
+func (c *NoteController) Update() {
 
 }
 
 //Delete ..
-func (c *TypeController) Delete() {
+func (c *NoteController) Delete() {
 
 }
 
-func (c *TypeController) initData(item *models.Type) {
-	mp := models.GetTypeMapper("")
-	count := mp.GetCount(nil, " name=? ", item.Name)
-	if count > 0 {
-		panic("已存在同名分类")
-	}
-	item.NamePinyin1, item.NamePinyin2 = utils.ToPinYin1(item.Name)
-	user := c.getUserFromSession()
-	item.CreateUserID = user.ID
-	item.CreateTime = time.Now()
+func (c *NoteController) initData(item *models.Note) {
+
 }

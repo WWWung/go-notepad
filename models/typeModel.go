@@ -44,7 +44,7 @@ func (m TypeMapper) Get(tx *sqlx.Tx, whereStr string, args ...interface{}) (r in
 		}
 	}()
 	sqlStr := "select * from " + m.TableName + whereStr
-	item := &User{}
+	item := &Type{}
 	r = m.getItem(tx, item, sqlStr, args...)
 	return r
 }
@@ -57,7 +57,7 @@ func (m TypeMapper) GetList(pageIndex int, rowsInPage int, sort string, whereStr
 			r = nil
 		}
 	}()
-	item := make([]*User, 0)
+	item := make([]*Type, 0)
 	sqlStr := "select * from " + m.TableName
 	if sort != "" {
 		sqlStr += " order by " + sort

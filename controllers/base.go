@@ -43,6 +43,8 @@ func (c *BaseControllers) HandleHTTPRequest(w http.ResponseWriter, r *http.Reque
 	utils.CheckErr(err)
 	c.store = store
 
+	c.r.ParseForm()
+
 	//	请求的Content-type为application/json 所以post里取得的数据为json格式
 	//	把这个数据解析成input类型并且存到BaseControllers.input里面
 	con, _ := ioutil.ReadAll(r.Body)

@@ -11,9 +11,9 @@ func init() {
 	t.I = t
 	register("/test.api", t)
 
-	c := new(controllers.CaptchaController)
-	c.I = c
-	register("/captcha.api", c)
+	captcha := new(controllers.CaptchaController)
+	captcha.I = captcha
+	register("/captcha.api", captcha)
 
 	user := new(controllers.UserController)
 	user.I = user
@@ -22,6 +22,10 @@ func init() {
 	_type := new(controllers.TypeController)
 	_type.I = _type
 	register("/type.api", _type)
+
+	note := new(controllers.NoteController)
+	note.I = note
+	register("/note.api", note)
 }
 
 func register(pattern string, service controllers.IService) {
